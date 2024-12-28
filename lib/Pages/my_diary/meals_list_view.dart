@@ -216,14 +216,7 @@ class MealsView extends StatelessWidget {
                                             blurRadius: 8.0),
                                       ],
                                     ),
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(6.0),
-                                      child: Icon(
-                                        Icons.add,
-                                        color: HexColor(mealsListData!.endColor),
-                                        size: 24,
-                                      ),
-                                    ),
+                                    
                                   ),
                           ],
                         ),

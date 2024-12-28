@@ -101,6 +101,7 @@ class _GifDisplayPageState extends State<GifDisplayPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(backgroundColor: Color.fromARGB(255, 0, 68, 255)),
       body: Container(
         decoration: const BoxDecoration(
           gradient: LinearGradient(

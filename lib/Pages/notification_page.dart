@@ -202,7 +202,7 @@ Future<void> fetchNotificationsForCurrentUser() async {
                                   style: TextStyle(
                                     fontFamily: FitnessAppTheme.fontName,
                                     fontWeight: FontWeight.w700,
-                                    fontSize: 18 + 3 - 3 * topBarOpacity,
+                                    fontSize: 25 + 3 - 3 * topBarOpacity,
                                     letterSpacing: 1.2,
                                     color: FitnessAppTheme.darkerText,
                                   ),

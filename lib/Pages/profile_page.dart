@@ -152,15 +152,48 @@ class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin
   }
 
   Future<void> signOut() async {
-    try {
-      await auth.signOut();
-      Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => const LoginPage()));
-    } catch (e) {
-      print("Error signing out: $e");
-    }
-  }
+  showDialog(
+    context: context,
+    builder: (context) => AlertDialog(
+      title: const Text("Are you sure you want to log out?"),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(context), // Cancel denilirse diyalog kapanıyor
+          child: const Text("Cancel"),
+        ),
+        TextButton(
+          onPressed: () async {
+            Navigator.pop(context); // Çıkış yapılmadan önce diyalog kapatılıyor
+            try {
+              await auth.signOut(); // user Signoutlanıyor
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => const LoginPage()),
+              );
+            } catch (e) {
+              print("Error signing out: $e");
+            }
+          },
+          child: const Text("Log out"),
+        ),
+      ],
+    ),
+  );
+}
+
   Future<void> settings()async {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text("Under Constructions"),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text("Cancel"),
+          ),
+        ],
+      ),
+    );
     
       /*Navigator.pushReplacement(
           context, MaterialPageRoute(builder: (context) => const ProfilePage()));*/
@@ -207,18 +240,18 @@ class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text("Edit Profile"),
-        content: TextField(
+        title: const Text("Under Constructions"),
+        /*content: TextField(
           controller: phoneController,
-          keyboardType: TextInputType.phone,
-          decoration: const InputDecoration(hintText: "Enter your phone number"),
-        ),
+          //keyboardType: TextInputType.phone,
+          decoration: const InputDecoration(hintText: ""),
+        ),*/
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
             child: const Text("Cancel"),
           ),
-          TextButton(
+          /*TextButton(
             onPressed: () {
               setState(() {
                 phoneNumber = phoneController.text;
@@ -226,7 +259,7 @@ class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin
               Navigator.pop(context);
             },
             child: const Text("Save"),
-          ),
+          ),*/
         ],
       ),
     );
@@ -331,7 +364,7 @@ class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin
                                   style: TextStyle(
                                     fontFamily: FitnessAppTheme.fontName,
                                     fontWeight: FontWeight.w700,
-                                    fontSize: 18 + 3 - 3 * topBarOpacity,
+                                    fontSize: 25 + 3 - 3 * topBarOpacity,
                                     letterSpacing: 1.2,
                                     color: FitnessAppTheme.darkerText,
                                   ),

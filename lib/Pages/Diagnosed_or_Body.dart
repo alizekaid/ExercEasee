@@ -16,6 +16,7 @@ class SplitPage extends StatelessWidget {
       color: FitnessAppTheme.background,  // Background color matching the rest of the app
       child: Scaffold(
         backgroundColor: Colors.transparent,
+        appBar: AppBar(backgroundColor: Colors.transparent,elevation: 0,),
         body: FutureBuilder<bool>(
           future: getData(), // Call the getData function here
           builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
@@ -75,7 +76,7 @@ class SplitPage extends StatelessWidget {
                           },
                           child: Container(
                             color: Colors.green.withOpacity(0.1), // Semi-transparent light green
-                            child: Center(
+                            child: const Center(
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [

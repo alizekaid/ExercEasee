@@ -30,6 +30,7 @@ class DiagnoseInjuries extends StatelessWidget {
       color: FitnessAppTheme.background,
       child: Scaffold(
         backgroundColor: Colors.transparent,
+        appBar: AppBar(backgroundColor: Colors.transparent, title: Text("Diagnosed Injuries"),),
         body: FutureBuilder<bool>(
           future: getData(),
           builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
