@@ -27,24 +27,34 @@ class UserInjuryInformation {
     final injuryDocSnapshot = await injuryDocRef.get();
 
     if (injuryDocSnapshot.exists) {
-      // Document exists, update the painLevel and gifUrls
-      await injuryDocRef.update({
-        'painLevel': painLevel, // Update painLevel
-        'gifUrls': gifUrls,     // Update GIF URLs
-        'timestamp': FieldValue.serverTimestamp(),
-      });
-
-      print("Injury information updated successfully");
-    } else {
-      // Document does not exist, create a new one with muscleName as document ID
-      final injuryData = {
-        'muscleName': muscleName,
-        'painLevel': painLevel,
-        'gifUrls': gifUrls, // Add the GIF URLs to the injury data
-        'timestamp': FieldValue.serverTimestamp(),
-      };
-
-      await injuryDocRef.set(injuryData); // Create the document with set()
+      int currentPainLevel = injuryDocSnapshot['painLevel'] ?? 0;
+      
+      if (currentPainLevel != painLevel) {
+          // Pain level has changed, reset progress to 0
+          await injuryDocRef.update({
+            'painLevel': painLevel,   // Update painLevel
+            'progress': 0.0,          // Reset progress to 0
+            'gifUrls': gifUrls,       // Update GIF URLs
+            'timestamp': FieldValue.serverTimestamp(),
+          });
+          print("Injury information updated with reset progress.");
+        } else {
+          // Pain level has not changed, update other fields
+          await injuryDocRef.update({
+            'gifUrls': gifUrls,       // Update GIF URLs
+            'timestamp': FieldValue.serverTimestamp(),
+          });
+          print("Injury information updated without progress change.");
+        }
+      } else {
+        // Document does not exist, create a new one with muscleName as document ID
+        final injuryData = {
+          'muscleName': muscleName,
+          'painLevel': painLevel,
+          'progress': 0.0,          // Set progress to 0 initially
+          'gifUrls': gifUrls,       // Add the GIF URLs to the injury data
+          'timestamp': FieldValue.serverTimestamp(),
+        };
 
       print("Injury information added successfully");
     }
