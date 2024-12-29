@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
-
 import 'fitness_app_theme.dart';
+import 'gif_display_page.dart';
 
 class DiagnoseInjuries extends StatelessWidget {
   final List<String> injuries = [
     'Cervical Herniated Disc',
     'Neck Stiffness',
-    'Shoulder Tear',
     'Shoulder Impingement',
-    "Tennis Elbow (Lateral Epicondylitis)",
-    "Golfer's Elbow (Medial Epicondylitis)",
+    "Tennis Elbow",
+    "Golfer's Elbow",
     'Carpal Tunnel Syndrome',
     'Extensor Tendon Injury',
     'Weakness in Muscles Around the Scapula',
@@ -18,7 +17,7 @@ class DiagnoseInjuries extends StatelessWidget {
     'Sacroiliac Joint Degeneration',
     'Osteoarthritis of The Hip',
     'Meniscus Tear In the Knee',
-    'Anterior Cruciate Ligament (ACL) Injury',
+    'Anterior Cruciate Ligament Injury',
     'Ligament Injuries',
     'Ankle Sprain',
     'Heel Spur',
@@ -30,7 +29,10 @@ class DiagnoseInjuries extends StatelessWidget {
       color: FitnessAppTheme.background,
       child: Scaffold(
         backgroundColor: Colors.transparent,
-        appBar: AppBar(backgroundColor: Colors.transparent, title: Text("Diagnosed Injuries"),),
+        appBar: AppBar(
+          backgroundColor: Colors.transparent,
+          title: Text("Diagnosed Injuries"),
+        ),
         body: FutureBuilder<bool>(
           future: getData(),
           builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
@@ -54,12 +56,22 @@ class DiagnoseInjuries extends StatelessWidget {
                             padding: const EdgeInsets.symmetric(vertical: 16.0),
                           ),
                           onPressed: () {
-                            print('CLICKED ON ${injuries[index]}');
+                            String formattedName = injuries[index].replaceAll(' ', '_');
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => GifDisplayPage(
+                                  muscleName: formattedName,
+                                  painLevel: 0,
+                                ),
+                              ),
+                            );
                           },
                           child: Text(
                             injuries[index],
                             style: (FitnessAppTheme.textTheme.bodyLarge ??
-                                    const TextStyle(fontSize: 16, color: Colors.white))
+                                    const TextStyle(
+                                        fontSize: 16, color: Colors.white))
                                 .copyWith(color: FitnessAppTheme.white),
                           ),
                         ),
@@ -76,8 +88,7 @@ class DiagnoseInjuries extends StatelessWidget {
   }
 
   Future<bool> getData() async {
-    // Simulate data fetching delay
     await Future.delayed(const Duration(seconds: 2));
-    return true; // Simulate successful data fetching
+    return true; 
   }
 }
