@@ -51,6 +51,9 @@ class _LoginPage extends State<LoginPage> {
           email: id.text.toString(), password: password.text.toString());
       isEmailVerified();
     } on FirebaseAuthException catch (e) {
+      //print("-------------------------------");
+      ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text("Invalid email or password! Please try again.")));
       if (e.code == 'invalid-email') {
         emailError = 'Enter valid email ID';
       }
