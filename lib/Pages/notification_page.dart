@@ -29,15 +29,18 @@ FirebaseAuth auth = FirebaseAuth.instance;
 @override
 void initState() {
   super.initState();
+  
   topBarAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
     CurvedAnimation(
       parent: widget.animationController!,
       curve: const Interval(0, 0.5, curve: Curves.fastOutSlowIn),
     ),
   );
-  fetchNotificationsForCurrentUser();
- 
-  
+
+  // Initialize topBarOpacity
+  topBarOpacity = 0.0;
+
+  // Add scroll listener for opacity changes
   scrollController.addListener(() {
     if (scrollController.offset >= 24) {
       if (topBarOpacity != 1.0) {
@@ -60,7 +63,19 @@ void initState() {
       }
     }
   });
+
+  // Start the animation
+  widget.animationController?.forward();
+  
+  fetchNotificationsForCurrentUser();
 }
+
+@override
+void dispose() {
+  scrollController.dispose();
+  super.dispose();
+}
+
 Future<void> fetchNotificationsForCurrentUser() async {
     try {
       final currentUser = FirebaseAuth.instance.currentUser;
@@ -74,8 +89,8 @@ Future<void> fetchNotificationsForCurrentUser() async {
       // Fetch data from Firestore for the logged-in user
       final snapshot = await FirebaseFirestore.instance
           .collection('Users')
-          .doc(userId) // Access the logged-in user's document
-          .collection('notifications') // Notifications sub-collection
+          .doc(userId)
+          .collection('notifications')
           .get();
 
       // Map data to listViews
@@ -116,41 +131,38 @@ Future<void> fetchNotificationsForCurrentUser() async {
         backgroundColor: Colors.transparent,
         body: Stack(
           children: <Widget>[
-            getMainListViewUI(),
             getAppBarUI(),
+            Padding(
+              padding: EdgeInsets.only(
+                top: AppBar().preferredSize.height +
+                    MediaQuery.of(context).padding.top + 24,
+              ),
+              child: listViews.isEmpty
+                  ? const Center(
+                      child: Text(
+                        'No notifications available',
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: FitnessAppTheme.grey,
+                        ),
+                      ),
+                    )
+                  : ListView.builder(
+                      controller: scrollController,
+                      itemCount: listViews.length,
+                      scrollDirection: Axis.vertical,
+                      itemBuilder: (BuildContext context, int index) {
+                        widget.animationController?.forward();
+                        return listViews[index];
+                      },
+                    ),
+            ),
             SizedBox(
               height: MediaQuery.of(context).padding.bottom,
             )
           ],
         ),
       ),
-    );
-  }
-
-  Widget getMainListViewUI() {
-    return FutureBuilder<bool>(
-      future: getData(),
-      builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
-        if (!snapshot.hasData) {
-          return const SizedBox();
-        } else {
-          return ListView.builder(
-            controller: scrollController,
-            padding: EdgeInsets.only(
-              top: AppBar().preferredSize.height +
-                  MediaQuery.of(context).padding.top +
-                  24,
-              bottom: 62 + MediaQuery.of(context).padding.bottom,
-            ),
-            itemCount: listViews.length,
-            scrollDirection: Axis.vertical,
-            itemBuilder: (BuildContext context, int index) {
-              widget.animationController?.forward();
-              return listViews[index];
-            },
-          );
-        }
-      },
     );
   }
 
@@ -174,7 +186,7 @@ Future<void> fetchNotificationsForCurrentUser() async {
                     boxShadow: <BoxShadow>[
                       BoxShadow(
                           color: FitnessAppTheme.grey
-                              .withOpacity(0.4 * topBarOpacity),
+                              .withOpacity(0.4 *topBarOpacity),
                           offset: const Offset(1.1, 1.1),
                           blurRadius: 10.0),
                     ],
@@ -202,7 +214,7 @@ Future<void> fetchNotificationsForCurrentUser() async {
                                   style: TextStyle(
                                     fontFamily: FitnessAppTheme.fontName,
                                     fontWeight: FontWeight.w700,
-                                    fontSize: 25 + 3 - 3 * topBarOpacity,
+                                    fontSize: 22 + 6 - 6 * topBarOpacity,
                                     letterSpacing: 1.2,
                                     color: FitnessAppTheme.darkerText,
                                   ),

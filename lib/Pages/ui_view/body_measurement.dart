@@ -62,48 +62,21 @@ class BodyMeasurementView extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: <Widget>[
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.end,
-                                children: <Widget>[
-                                  Padding(
-                                    padding: EdgeInsets.all(8),
-                                    child: Text(
-                                      'If you don\'t have weights for certain \n exercises, you can use 500mL bottles\n instead of those weights.',
-                                      textAlign: TextAlign.justify,
-                                      style: TextStyle(
-                                        fontFamily: FitnessAppTheme.fontName,
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 16,
-                                        color: FitnessAppTheme.nearlyDarkBlue,
-                                      ),
+                              Expanded(
+                                child: Padding(
+                                  padding: EdgeInsets.all(8),
+                                  child: Text(
+                                    'If you don\'t have weights for certain exercises, you can use 500mL bottles instead of those weights.',
+                                    textAlign: TextAlign.justify,
+                                    style: TextStyle(
+                                      fontFamily: FitnessAppTheme.fontName,
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 16,
+                                      color: FitnessAppTheme.nearlyDarkBlue,
                                     ),
                                   ),
-                                  Padding(
-                                    padding: EdgeInsets.only(
-                                        left: 8, bottom: 8),
-                                    
-                                  ),
-                                ],
+                                ),
                               ),
-                              Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.end,
-                                children: <Widget>[
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: <Widget>[
-                                      
-                                      
-                                    ],
-                                  ),
-                                  Padding(
-                                    padding: EdgeInsets.only(
-                                        top: 4, bottom: 14),
-                                    
-                                  ),
-                                ],
-                              )
                             ],
                           )
                         ],
@@ -123,8 +96,25 @@ class BodyMeasurementView extends StatelessWidget {
                     const Padding(
                       padding: EdgeInsets.only(
                           left: 24, right: 24, top: 8, bottom: 16),
-                      
-                    )
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: <Widget>[
+                          Expanded(
+                            child: Text(
+                              'Remember to warm up before exercising and cool down afterwards to prevent injury and improve recovery.',
+                              textAlign: TextAlign.justify,
+                              style: TextStyle(
+                                fontFamily: FitnessAppTheme.fontName,
+                                fontWeight: FontWeight.w600,
+                                fontSize: 16,
+                                color: FitnessAppTheme.nearlyDarkBlue,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                   ],
                 ),
               ),

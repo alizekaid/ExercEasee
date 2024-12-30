@@ -91,16 +91,19 @@ class RunningView extends StatelessWidget {
                                       top: 4,
                                       right: 16,
                                     ),
-                                    child: Text(
-                                      "Keep it up\nand stick to your plan!",
-                                      textAlign: TextAlign.left,
-                                      style: TextStyle(
-                                        fontFamily: FitnessAppTheme.fontName,
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 10,
-                                        letterSpacing: 0.0,
-                                        color: FitnessAppTheme.grey
-                                            .withOpacity(0.5),
+                                    child: Container(
+                                      width: 160,
+                                      child: Text(
+                                        "Take it slow and follow your recovery plan. Your health is our priority.",
+                                        textAlign: TextAlign.left,
+                                        style: TextStyle(
+                                          fontFamily: FitnessAppTheme.fontName,
+                                          fontWeight: FontWeight.w500,
+                                          fontSize: 10,
+                                          letterSpacing: 0.0,
+                                          color: FitnessAppTheme.grey
+                                              .withOpacity(0.5),
+                                        ),
                                       ),
                                     ),
                                   ),

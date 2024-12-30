@@ -22,17 +22,13 @@ class _LoginPage extends State<LoginPage> {
 
   var id = TextEditingController();
   var password = TextEditingController();
-  var phone = TextEditingController();
 
   bool notvisible = true;
   bool notVisiblePassword = true;
   Icon passwordIcon = const Icon(Icons.visibility);
-  bool emailFormVisibility = true;
-  bool otpVisibilty = false;
 
   String? emailError;
   String? passError;
-  String? _verificationCode;
 
 // ================================================Password Visibility function ===========================================
 
@@ -66,42 +62,6 @@ class _LoginPage extends State<LoginPage> {
       }
     }
     setState(() {});
-  }
-// ================================================Login Using phone number ==============================================
-
-  signinphone() async {
-    await FirebaseAuth.instance.verifyPhoneNumber(
-      phoneNumber: phone.text.toString(),
-      verificationCompleted: (PhoneAuthCredential credential) async {
-        await FirebaseAuth.instance
-            .signInWithCredential(credential)
-            .then((value) async {
-          if (value.user != null) {
-            first_login();
-          }
-        });
-      },
-      verificationFailed: (FirebaseAuthException e) {
-        if (e.code == 'invalid-phone-number') {
-          const SnackBar(
-              content: Text('The provided phone number is not valid.'));
-        }
-      },
-      codeSent: (String? verificationId, int? resendToken) async {
-        setState(() {
-          otpVisibilty = true;
-          _verificationCode = verificationId;
-          Navigator.push(context, MaterialPageRoute(builder: (context) {
-            return OTPPage(id: _verificationCode, phone: phone.text.toString());
-          }));
-        });
-      },
-      codeAutoRetrievalTimeout: (String verificationId) {
-        setState(() {
-          _verificationCode = verificationId;
-        });
-      },
-    );
   }
 
 // ================================================Login Using Google function ==============================================
@@ -224,74 +184,41 @@ class _LoginPage extends State<LoginPage> {
                       const SizedBox(
                         height: 10,
                       ),
-                      Visibility(
-                        visible: emailFormVisibility,
-                        child: Form(
-                            key: _formKey,
-                            child: Column(
-                              children: [
-                                TextFormField(
-                                  decoration: InputDecoration(
-                                      icon: const Icon(
-                                        Icons.alternate_email_outlined,
-                                        color: Colors.grey,
-                                      ),
-                                      labelText: 'Email ID',
-                                      suffixIcon: IconButton(
-                                          onPressed: () {
-                                            setState(() {
-                                              emailFormVisibility =
-                                                  !emailFormVisibility;
-                                            });
-                                          },
-                                          icon: const Icon(
-                                              Icons.phone_android_rounded))),
-                                  controller: id,
-                                ),
-                                TextFormField(
-                                  obscureText: notvisible,
-                                  decoration: InputDecoration(
-                                      icon: const Icon(
-                                        Icons.lock_outline_rounded,
-                                        color: Colors.grey,
-                                      ),
-                                      labelText: 'Password',
-                                      suffixIcon: IconButton(
-                                          onPressed: () {
-                                            setState(() {
-                                              notvisible = !notvisible;
-                                              notVisiblePassword =
-                                                  !notVisiblePassword;
-                                              passwordVisibility();
-                                            });
-                                          },
-                                          icon: passwordIcon)),
-                                  controller: password,
-                                )
-                              ],
-                            )),
-                      ),
-                      Visibility(
-                          visible: !emailFormVisibility,
-                          child: Form(
-                            child: TextFormField(
-                              decoration: InputDecoration(
-                                  icon: const Icon(
-                                    Icons.phone_android_rounded,
+                      Form(
+                          key: _formKey,
+                          child: Column(
+                            children: [
+                              TextFormField(
+                                decoration: const InputDecoration(
+                                  icon: Icon(
+                                    Icons.alternate_email_outlined,
                                     color: Colors.grey,
                                   ),
-                                  labelText: 'Phone Number',
-                                  suffixIcon: IconButton(
-                                      onPressed: () {
-                                        setState(() {
-                                          emailFormVisibility =
-                                              !emailFormVisibility;
-                                        });
-                                      },
-                                      icon: const Icon(
-                                          Icons.alternate_email_rounded))),
-                              controller: phone,
-                            ),
+                                  labelText: 'Email ID',
+                                ),
+                                controller: id,
+                              ),
+                              TextFormField(
+                                obscureText: notvisible,
+                                decoration: InputDecoration(
+                                    icon: const Icon(
+                                      Icons.lock_outline_rounded,
+                                      color: Colors.grey,
+                                    ),
+                                    labelText: 'Password',
+                                    suffixIcon: IconButton(
+                                        onPressed: () {
+                                          setState(() {
+                                            notvisible = !notvisible;
+                                            notVisiblePassword =
+                                                !notVisiblePassword;
+                                            passwordVisibility();
+                                          });
+                                        },
+                                        icon: passwordIcon)),
+                                controller: password,
+                              )
+                            ],
                           )),
 
                       const SizedBox(height: 13),
@@ -320,14 +247,7 @@ class _LoginPage extends State<LoginPage> {
                       ),
                       // Login Button
                       ElevatedButton(
-                        onPressed: () {
-                          if (emailFormVisibility) {
-                            login();
-                            //first_login();
-                          } else {
-                            signinphone();
-                          }
-                        },
+                        onPressed: () => login(),
                         style: ElevatedButton.styleFrom(
                             minimumSize: const Size.fromHeight(45),
                             shape: RoundedRectangleBorder(
@@ -366,10 +286,7 @@ class _LoginPage extends State<LoginPage> {
                       const SizedBox(height: 20),
                       // Login with google
                       ElevatedButton.icon(
-                        onPressed: () {
-                          signInWithGoogle();
-                          //first_login();
-                        },
+                        onPressed: () => signInWithGoogle(),
                         icon: Image.asset(
                           'assets/images/google_logo.png',
                           width: 20,

@@ -71,21 +71,23 @@ class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin
 
   void addAllListData() {
     const int count = 9;
+    
+    // Clear existing items first
+    listViews.clear();
 
     listViews.add(
-  ProfileView(
-    animation: Tween<double>(begin: 0.0, end: 1.0).animate(
-        CurvedAnimation(
-            parent: widget.animationController!,
-            curve: const Interval((1 / count) * 3, 1.0,
-                curve: Curves.fastOutSlowIn))),
-    animationController: widget.animationController,
-    displayName: displayName,
-    email: email,
-    userPhoto: userPhoto ?? '',
-  ),
-);
-
+      ProfileView(
+        animation: Tween<double>(begin: 0.0, end: 1.0).animate(
+            CurvedAnimation(
+                parent: widget.animationController!,
+                curve: const Interval((1 / count) * 3, 1.0,
+                    curve: Curves.fastOutSlowIn))),
+        animationController: widget.animationController,
+        displayName: displayName,
+        email: email,
+        userPhoto: userPhoto ?? '',
+      ),
+    );
 
     listViews.add(
       Padding(
@@ -194,10 +196,6 @@ class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin
         ],
       ),
     );
-    
-      /*Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => const ProfilePage()));*/
-    
   }
 
   Widget _buildProfileButton(
@@ -234,32 +232,75 @@ class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin
   }
 
   void _editProfile(BuildContext context) {
-    TextEditingController phoneController =
-        TextEditingController(text: phoneNumber);
+    TextEditingController nameController = TextEditingController(text: displayName);
 
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text("Under Constructions"),
-        /*content: TextField(
-          controller: phoneController,
-          //keyboardType: TextInputType.phone,
-          decoration: const InputDecoration(hintText: ""),
-        ),*/
+        title: const Text("Edit Profile"),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextField(
+              controller: nameController,
+              decoration: const InputDecoration(
+                labelText: "Name",
+                hintText: "Enter your name",
+              ),
+            ),
+          ],
+        ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
             child: const Text("Cancel"),
           ),
-          /*TextButton(
-            onPressed: () {
-              setState(() {
-                phoneNumber = phoneController.text;
-              });
-              Navigator.pop(context);
+          TextButton(
+            onPressed: () async {
+              try {
+                User? user = FirebaseAuth.instance.currentUser;
+                if (user != null) {
+                  bool isGoogleUser = user.providerData
+                      .any((provider) => provider.providerId == 'google.com');
+
+                  if (isGoogleUser) {
+                    // Update display name for Google user
+                    await user.updateDisplayName(nameController.text);
+                  } else {
+                    // Update Firestore for regular user
+                    await FirebaseFirestore.instance
+                        .collection('Users')
+                        .doc(user.uid)
+                        .update({
+                      'name_surname': nameController.text,
+                    });
+                  }
+                  
+                  // Update state
+                  setState(() {
+                    displayName = nameController.text;
+                  });
+
+                  // Rebuild the profile view
+                  addAllListData();
+                  
+                  // Close dialog
+                  Navigator.pop(context);
+
+                  // Show success message
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text("Profile updated successfully")),
+                  );
+                }
+              } catch (e) {
+                print("Error updating profile: $e");
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text("Failed to update profile")),
+                );
+              }
             },
             child: const Text("Save"),
-          ),*/
+          ),
         ],
       ),
     );
