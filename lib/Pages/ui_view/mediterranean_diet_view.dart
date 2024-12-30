@@ -1,4 +1,5 @@
 import 'package:first_app/Pages/fitness_app_theme.dart';
+import 'package:first_app/Services/progressFetcher.dart';
 import 'package:first_app/main.dart';
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
@@ -9,10 +10,32 @@ class MediterranesnDietView extends StatelessWidget {
   final String titleTxt;
 
   const MediterranesnDietView(
-      {super.key, this.animationController, this.animation, this.titleTxt =''});
+      {super.key, this.animationController, this.animation, this.titleTxt = ''});
 
   @override
   Widget build(BuildContext context) {
+    return FutureBuilder<double>(
+      future: ProgressFetcher.fetchUserProgress(), // Fetch the progress
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          // While waiting for the future to resolve, show a loading spinner
+          return Center(child: CircularProgressIndicator());
+        } else if (snapshot.hasError) {
+          // If there was an error, show an error message
+          return Center(child: Text('Error fetching progress'));
+        } else if (snapshot.hasData) {
+          // If the future completed successfully, use the data
+          double avgProgress = snapshot.data!;
+          return buildContent(context, avgProgress);
+        } else {
+          // If the future returned null
+          return Center(child: Text('No progress data available'));
+        }
+      },
+    );
+  }
+
+  Widget buildContent(BuildContext context, double avgProgress) {
     return AnimatedBuilder(
       animation: animationController!,
       builder: (BuildContext context, Widget? child) {
@@ -95,18 +118,10 @@ class MediterranesnDietView extends StatelessWidget {
                                               crossAxisAlignment:
                                                   CrossAxisAlignment.end,
                                               children: <Widget>[
-                                                /*SizedBox(
-                                                  width: 28,
-                                                  height: 28,
-                                                  child: Image.asset(
-                                                      "assets/images/eaten.png"),//burayı başka bir görselle değiştireceğiz
-                                                ),*/
                                                 const Padding(
-                                                  padding:
-                                                      EdgeInsets.only(
-                                                          left: 4, bottom: 3),
+                                                  padding: EdgeInsets.only(
+                                                      left: 4, bottom: 3),
                                                   child: Text(
-                                                    //'${(10 * animation!.value).toInt()}',
                                                     '%64',
                                                     textAlign: TextAlign.center,
                                                     style: TextStyle(
@@ -195,18 +210,10 @@ class MediterranesnDietView extends StatelessWidget {
                                               crossAxisAlignment:
                                                   CrossAxisAlignment.end,
                                               children: <Widget>[
-                                                /*SizedBox(
-                                                  width: 28,
-                                                  height: 28,
-                                                  child: Image.asset(
-                                                      "assets/images/burned.png"),
-                                                ),*/
                                                 const Padding(
-                                                  padding:
-                                                      EdgeInsets.only(
-                                                          left: 4, bottom: 3),
+                                                  padding: EdgeInsets.only(
+                                                      left: 4, bottom: 3),
                                                   child: Text(
-                                                    //'${(102 * animation!.value).toInt()}',
                                                     '%45',
                                                     textAlign: TextAlign.center,
                                                     style: TextStyle(
@@ -222,9 +229,8 @@ class MediterranesnDietView extends StatelessWidget {
                                                   ),
                                                 ),
                                                 Padding(
-                                                  padding:
-                                                      const EdgeInsets.only(
-                                                          left: 8, bottom: 3),
+                                                  padding: const EdgeInsets.only(
+                                                      left: 8, bottom: 3),
                                                   child: Text(
                                                     'you\'re doing great!',
                                                     textAlign: TextAlign.center,
@@ -282,7 +288,7 @@ class MediterranesnDietView extends StatelessWidget {
                                             CrossAxisAlignment.center,
                                         children: <Widget>[
                                           Text(
-                                            '${(5 * animation!.value).toInt()}',
+                                            '%${avgProgress.toStringAsFixed(2)}',
                                             textAlign: TextAlign.center,
                                             style: const TextStyle(
                                               fontFamily:
@@ -295,7 +301,7 @@ class MediterranesnDietView extends StatelessWidget {
                                             ),
                                           ),
                                           Text(
-                                            'Exercise lvl',
+                                            'Your Overall Progress',
                                             textAlign: TextAlign.center,
                                             style: TextStyle(
                                               fontFamily:
@@ -311,7 +317,7 @@ class MediterranesnDietView extends StatelessWidget {
                                       ),
                                     ),
                                   ),
-                                  Padding(//bu kısım animasyonlu seviye gösteren yer
+                                  Padding(
                                     padding: const EdgeInsets.all(4.0),
                                     child: CustomPaint(
                                       painter: CurvePainter(
@@ -320,9 +326,9 @@ class MediterranesnDietView extends StatelessWidget {
                                             HexColor("#8A98E8"),
                                             HexColor("#8A98E8")
                                           ],
-                                          angle: 140 +
+                                          angle: avgProgress*360/100  /*140 +
                                               (360 - 140) *
-                                                  (1.0 - animation!.value)),
+                                                  (1.0 - animation!.value)*/),
                                       child: const SizedBox(
                                         width: 108,
                                         height: 108,
@@ -579,6 +585,7 @@ class CurvePainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
+    print("Angle value: ${angle}");
     List<Color> colorsList = [];
     if (colors != null) {
       colorsList = colors ?? [];

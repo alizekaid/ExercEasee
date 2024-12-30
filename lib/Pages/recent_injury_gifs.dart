@@ -72,9 +72,9 @@ class _RecentInjuriesState extends State<RecentInjuries> {
   // Function to start tracking time after progress is fetched
   void _startTimer() {
     if (_currentProgress != null) {
-      _timer = Timer.periodic(const Duration(seconds: 30), (timer) {
+      _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
         setState(() {
-          _totalTimeSpent += 30; // Increment time spent by 1 second
+          _totalTimeSpent += 1; // Increment time spent by 1 second
         });
         _updateProgressInFirestore(); // Update progress in Firestore every 30 second
       });
@@ -91,21 +91,9 @@ class _RecentInjuriesState extends State<RecentInjuries> {
   // Calculate progress increment (7% for every 26 minutes or 1560 seconds)
   double progressIncrement = (_totalTimeSpent / 1560 * 7); // Calculate progress increment
 
-  // Cap the increment to 7% max
-  if (progressIncrement > 7) {
-    progressIncrement = 7;
-  }
+  double newProgress = (_currentProgress ?? 0.0) + progressIncrement;
 
-  // Accumulate progress (add the progress increment to the existing value)
-  double newProgress = (_currentProgress ?? 0) + progressIncrement;
-  if (newProgress > 7) {
-    newProgress = 7; // Ensure it doesn't exceed 100% progress
-  }
-
-  setState(() {
-    _currentProgress = newProgress; // Update current progress
-  });
-
+  
   try {
     // Reference to the user's specific body part document
     DocumentReference injuryDoc = _firestore
@@ -116,6 +104,10 @@ class _RecentInjuriesState extends State<RecentInjuries> {
 
     // Update the progress field in Firestore
     await injuryDoc.set({'progress': _currentProgress}, SetOptions(merge: true));
+
+    setState(() {
+    _currentProgress = newProgress; // Update current progress
+  });
 
     debugPrint('Progress updated successfully: $_currentProgress%');
   } catch (e) {

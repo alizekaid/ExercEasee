@@ -1,5 +1,6 @@
 import 'package:first_app/Pages/notification_page.dart';
 import 'package:first_app/Pages/profile_page.dart';
+import 'package:first_app/Services/progressFetcher.dart';
 import 'package:first_app/models/tabIcon_data.dart';
 import 'package:first_app/Pages/training/training_screen.dart';
 import 'package:flutter/material.dart';
@@ -34,7 +35,9 @@ class _FitnessAppHomeScreenState extends State<FitnessAppHomeScreen>
     animationController = AnimationController(
         duration: const Duration(milliseconds: 600), vsync: this);
     tabBody = MyDiaryScreen(animationController: animationController);
-    super.initState();
+    // Call fetchUserProgress when the page loads
+    fetchUserProgress(); // Ensure this function is executed when the screen appears.
+    //super.initState();
   }
 
   @override
@@ -130,5 +133,8 @@ class _FitnessAppHomeScreenState extends State<FitnessAppHomeScreen>
         ),
       ],
     );
+  }
+  void fetchUserProgress() async {
+    double avgProgress = await ProgressFetcher.fetchUserProgress();
   }
 }
