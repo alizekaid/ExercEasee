@@ -144,6 +144,7 @@ class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin
               displayName = userDoc['name_surname'];
               email = userDoc['email'];
               age = userDoc['age'].toString();
+              phoneNumber = userDoc['phone_number'];
             });
           }
         }
@@ -233,7 +234,40 @@ class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin
 
   void _editProfile(BuildContext context) {
     TextEditingController nameController = TextEditingController(text: displayName);
-
+    TextEditingController phoneNumberController = TextEditingController(text: phoneNumber);
+  
+    // ---------------------------------------- THIS PART OF THE CODE IS SPECIALIZED FOR IMAGE UPDATION AMA FIREBASE STORAGE YOK --------------------------------------
+/*
+    // Function to pick an image from the gallery
+    Future<void> _pickImage() async {
+    final picker = ImagePicker();
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      try {
+        // Upload image to Firebase Storage
+        User? user = FirebaseAuth.instance.currentUser;
+        if (user != null) {
+          final storageRef = FirebaseStorage.instance.ref().child('profile_pictures').child(user.uid);
+          await storageRef.putFile(File(pickedFile.path));
+          String downloadUrl = await storageRef.getDownloadURL();
+          // Update Firestore with the new profile picture URL
+          await FirebaseFirestore.instance.collection('Users').doc(user.uid).set({
+            'profile_picture': downloadUrl,
+          }, SetOptions(merge: true));
+          // Show success message
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text("Profile picture updated successfully")),
+          );
+        }
+      } catch (e) {
+        print("Error uploading profile picture: $e");
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Failed to upload profile picture")),
+        );
+      }
+    }
+  }
+  */
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -241,6 +275,21 @@ class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
+            // --------------------------------- FOR IMAGE UPDATION --------------------------------
+          /* 
+            // Display current profile picture
+          CircleAvatar(
+            radius: 40,
+            backgroundImage: NetworkImage(userPhoto?? ""),
+            child: Align(
+              alignment: Alignment.bottomRight,
+              child: IconButton(
+                icon: const Icon(Icons.camera_alt),
+                onPressed: _pickImage,
+              ),
+            ),
+          ),
+          */
             TextField(
               controller: nameController,
               decoration: const InputDecoration(
@@ -248,6 +297,39 @@ class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin
                 hintText: "Enter your name",
               ),
             ),
+            TextField(
+              controller: phoneNumberController,
+              decoration: const InputDecoration(
+                labelText: "Phone Number",
+                hintText: "Enter your phone number",
+              ),
+            ),
+            const SizedBox(height: 20),  // Add some space before the button
+          ElevatedButton(
+            onPressed: () async {
+              try {
+                User? user = FirebaseAuth.instance.currentUser;
+                if (user != null) {
+                  // Send password reset email to current user's email
+                  await FirebaseAuth.instance.sendPasswordResetEmail(email: user.email!);
+                  // Show success message
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text("Password reset email sent")),
+                  );
+                  // Navigate to the login screen
+                  Navigator.of(context).pushReplacement(
+                    MaterialPageRoute(builder: (context) => LoginPage()),
+                  );
+                }
+              } catch (e) {
+                print("Error sending password reset email: $e");
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text("Failed to send password reset email")),
+                );
+              }
+            },
+            child: const Text("Reset Password"),
+          ),
           ],
         ),
         actions: [
@@ -275,11 +357,13 @@ class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin
                     'email': user.email,
                     // Add any other fields you want to persist
                     'isGoogleUser': isGoogleUser,
+                    'phone_number': phoneNumberController.text,
                   }, SetOptions(merge: true));
                   
                   // Update state and UI
                   setState(() {
                     displayName = nameController.text;
+                    phoneNumber = phoneNumberController.text;
                   });
                   addAllListData();
                   
