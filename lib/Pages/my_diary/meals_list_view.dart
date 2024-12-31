@@ -27,17 +27,6 @@ class _MealsListViewState extends State<MealsListView>
     super.initState();
   }
 
-  Future<bool> getData() async {
-    await Future<dynamic>.delayed(const Duration(milliseconds: 50));
-    return true;
-  }
-
-  @override
-  void dispose() {
-    animationController?.dispose();
-    super.dispose();
-  }
-
   @override
   Widget build(BuildContext context) {
     return AnimatedBuilder(
@@ -53,24 +42,27 @@ class _MealsListViewState extends State<MealsListView>
               width: double.infinity,
               child: ListView.builder(
                 padding: const EdgeInsets.only(
-                    top: 0, bottom: 0, right: 16, left: 16),
-                itemCount: mealsListData.length,
+                    right: 16, left: 16),
                 scrollDirection: Axis.horizontal,
+                itemCount: mealsListData.length,
                 itemBuilder: (BuildContext context, int index) {
-                  final int count =
-                      mealsListData.length > 10 ? 10 : mealsListData.length;
                   final Animation<double> animation =
                       Tween<double>(begin: 0.0, end: 1.0).animate(
-                          CurvedAnimation(
-                              parent: animationController!,
-                              curve: Interval((1 / count) * index, 1.0,
-                                  curve: Curves.fastOutSlowIn)));
+                    CurvedAnimation(
+                      parent: animationController!,
+                      curve: Interval((1 / mealsListData.length) * index, 1.0,
+                          curve: Curves.fastOutSlowIn),
+                    ),
+                  );
                   animationController?.forward();
 
                   return MealsView(
                     mealsListData: mealsListData[index],
                     animation: animation,
                     animationController: animationController!,
+                    onTap: () {
+                      _showInstructionsDialog(context, mealsListData[index]);
+                    },
                   );
                 },
               ),
@@ -80,15 +72,68 @@ class _MealsListViewState extends State<MealsListView>
       },
     );
   }
+
+  void _showInstructionsDialog(BuildContext context, MealsListData mealsListData) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(mealsListData.titleTxt),
+          content: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text('Duration: ${mealsListData.duration}',
+                    style: const TextStyle(fontWeight: FontWeight.bold)),
+                const SizedBox(height: 10),
+                const Text('Instructions:',
+                    style: TextStyle(fontWeight: FontWeight.bold)),
+                const SizedBox(height: 5),
+                ...mealsListData.instructions.map((instruction) => Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 4),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text('• ', style: TextStyle(fontSize: 16)),
+                          Expanded(child: Text(instruction)),
+                        ],
+                      ),
+                    )),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('Close'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  @override
+  void dispose() {
+    animationController?.dispose();
+    super.dispose();
+  }
 }
 
 class MealsView extends StatelessWidget {
   const MealsView(
-      {super.key, this.mealsListData, this.animationController, this.animation});
+      {Key? key,
+      this.mealsListData,
+      this.animationController,
+      this.animation,
+      this.onTap})
+      : super(key: key);
 
   final MealsListData? mealsListData;
   final AnimationController? animationController;
   final Animation<double>? animation;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -107,118 +152,75 @@ class MealsView extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.only(
                         top: 32, left: 8, right: 8, bottom: 16),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        boxShadow: <BoxShadow>[
-                          BoxShadow(
+                    child: InkWell(
+                      onTap: onTap,
+                      child: Container(
+                        decoration: BoxDecoration(
+                          boxShadow: <BoxShadow>[
+                            BoxShadow(
                               color: HexColor(mealsListData!.endColor)
                                   .withOpacity(0.6),
                               offset: const Offset(1.1, 4.0),
-                              blurRadius: 8.0),
-                        ],
-                        gradient: LinearGradient(
-                          colors: <HexColor>[
-                            HexColor(mealsListData!.startColor),
-                            HexColor(mealsListData!.endColor),
-                          ],
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                        ),
-                        borderRadius: const BorderRadius.only(
-                          bottomRight: Radius.circular(8.0),
-                          bottomLeft: Radius.circular(8.0),
-                          topLeft: Radius.circular(8.0),
-                          topRight: Radius.circular(54.0),
-                        ),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.only(
-                            top: 54, left: 16, right: 16, bottom: 8),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Text(
-                              mealsListData!.titleTxt,
-                              textAlign: TextAlign.center,
-                              style: const TextStyle(
-                                fontFamily: FitnessAppTheme.fontName,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 14,
-                                letterSpacing: 0.2,
-                                color: FitnessAppTheme.white,
-                              ),
+                              blurRadius: 8.0,
                             ),
-                            const Expanded(
-                              child: Padding(
-                                padding:
-                                    EdgeInsets.only(top: 8, bottom: 8),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  /*children: <Widget>[
-                                    Text(
-                                      mealsListData!.meals!.join('\n'),
-                                      style: const TextStyle(
-                                        fontFamily: FitnessAppTheme.fontName,
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 10,
-                                        letterSpacing: 0.2,
-                                        color: FitnessAppTheme.white,
-                                      ),
-                                    ),
-                                  ],*/
+                          ],
+                          gradient: LinearGradient(
+                            colors: <HexColor>[
+                              HexColor(mealsListData!.startColor),
+                              HexColor(mealsListData!.endColor),
+                            ],
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                          ),
+                          borderRadius: const BorderRadius.only(
+                            bottomRight: Radius.circular(8.0),
+                            bottomLeft: Radius.circular(8.0),
+                            topLeft: Radius.circular(8.0),
+                            topRight: Radius.circular(40.0),
+                          ),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.only(
+                              top: 54, left: 16, right: 16, bottom: 8),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Text(
+                                mealsListData!.titleTxt,
+                                textAlign: TextAlign.center,
+                                style: const TextStyle(
+                                  fontFamily: FitnessAppTheme.fontName,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16,
+                                  letterSpacing: 0.2,
+                                  color: FitnessAppTheme.white,
                                 ),
                               ),
-                            ),
-                            /*mealsListData?.kacl != 0
-                                ? Row(
+                              Expanded(
+                                child: Padding(
+                                  padding:
+                                      const EdgeInsets.only(top: 8, bottom: 8),
+                                  child: Row(
                                     mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment: CrossAxisAlignment.end,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
                                     children: <Widget>[
                                       Text(
-                                        mealsListData!.kacl.toString(),
-                                        textAlign: TextAlign.center,
+                                        mealsListData!.duration,
                                         style: const TextStyle(
                                           fontFamily: FitnessAppTheme.fontName,
                                           fontWeight: FontWeight.w500,
-                                          fontSize: 24,
+                                          fontSize: 10,
                                           letterSpacing: 0.2,
                                           color: FitnessAppTheme.white,
                                         ),
                                       ),
-                                      const Padding(
-                                        padding: EdgeInsets.only(
-                                            left: 4, bottom: 3),
-                                        child: Text(
-                                          'kcal',
-                                          style: TextStyle(
-                                            fontFamily:
-                                                FitnessAppTheme.fontName,
-                                            fontWeight: FontWeight.w500,
-                                            fontSize: 10,
-                                            letterSpacing: 0.2,
-                                            color: FitnessAppTheme.white,
-                                          ),
-                                        ),
-                                      ),
                                     ],
-                                  )
-                                :*/Container(
-                                    decoration: BoxDecoration(
-                                      color: FitnessAppTheme.nearlyWhite,
-                                      shape: BoxShape.circle,
-                                      boxShadow: <BoxShadow>[
-                                        BoxShadow(
-                                            color: FitnessAppTheme.nearlyBlack
-                                                .withOpacity(0.4),
-                                            offset: const Offset(8.0, 8.0),
-                                            blurRadius: 8.0),
-                                      ],
-                                    ),
-                                    
                                   ),
-                          ],
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ),
@@ -233,14 +235,6 @@ class MealsView extends StatelessWidget {
                         color: FitnessAppTheme.nearlyWhite.withOpacity(0.2),
                         shape: BoxShape.circle,
                       ),
-                    ),
-                  ),
-                  Positioned(
-                    top: 0,
-                    left: 8,
-                    child: SizedBox(
-                      width: 80,
-                      height: 80,
                       child: Image.asset(mealsListData!.imagePath),
                     ),
                   )

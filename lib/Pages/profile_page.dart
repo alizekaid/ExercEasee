@@ -263,31 +263,27 @@ class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin
                   bool isGoogleUser = user.providerData
                       .any((provider) => provider.providerId == 'google.com');
 
-                  if (isGoogleUser) {
-                    // Update display name for Google user
-                    await user.updateDisplayName(nameController.text);
-                  } else {
-                    // Update Firestore for regular user
-                    await FirebaseFirestore.instance
-                        .collection('Users')
-                        .doc(user.uid)
-                        .update({
-                      'name_surname': nameController.text,
-                    });
-                  }
+                  // Update Firebase Auth display name for all users
+                  await user.updateDisplayName(nameController.text);
+
+                  // Update Firestore for all users (both Google and regular)
+                  await FirebaseFirestore.instance
+                      .collection('Users')
+                      .doc(user.uid)
+                      .set({
+                    'name_surname': nameController.text,
+                    'email': user.email,
+                    // Add any other fields you want to persist
+                    'isGoogleUser': isGoogleUser,
+                  }, SetOptions(merge: true));
                   
-                  // Update state
+                  // Update state and UI
                   setState(() {
                     displayName = nameController.text;
                   });
-
-                  // Rebuild the profile view
                   addAllListData();
                   
-                  // Close dialog
                   Navigator.pop(context);
-
-                  // Show success message
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(content: Text("Profile updated successfully")),
                   );
