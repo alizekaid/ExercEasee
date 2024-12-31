@@ -39,7 +39,7 @@ class DiagnoseInjuries extends StatelessWidget {
   }) async {
     try {
       final response = await http.get(Uri.parse(
-          'http://13.49.238.112:3000/get-gif/$muscleName/$painLevel'));
+          'http://13.60.40.160:3000/get-gif/$muscleName/$painLevel'));
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> data = json.decode(response.body);

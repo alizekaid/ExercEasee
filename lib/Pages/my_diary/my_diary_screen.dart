@@ -38,15 +38,6 @@ class _MyDiaryScreenState extends State<MyDiaryScreen>
   try {
     User? user = FirebaseAuth.instance.currentUser;
     if (user != null) {
-      // Check if the user signed in with Google
-      bool isGoogleUser = user.providerData
-          .any((provider) => provider.providerId == 'google.com');
-
-      if (isGoogleUser) {
-        setState(() {
-          userName = user.displayName; // Use Google account name
-        });
-      } else {
         // Fetch from Firestore for standard login
         DocumentSnapshot userDoc = await FirebaseFirestore.instance
             .collection('Users')
@@ -59,7 +50,7 @@ class _MyDiaryScreenState extends State<MyDiaryScreen>
         } else {
           print("User document does not exist.");
         }
-      }
+      
     } else {
       print("User is not logged in.");
     }

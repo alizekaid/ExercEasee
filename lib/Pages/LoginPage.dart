@@ -88,6 +88,11 @@ class _LoginPage extends State<LoginPage> {
       // Save user data to Firestore
       final userDocRef = FirebaseFirestore.instance.collection('Users').doc(user.uid);
 
+    // Check if the user document already exists
+    DocumentSnapshot userDoc = await userDocRef.get();
+
+      if (!userDoc.exists) {
+      // If the user document does not exist, create it
       await userDocRef.set({
         'name_surname': user.displayName ?? 'Anonymous',
         'email': user.email,
@@ -95,7 +100,13 @@ class _LoginPage extends State<LoginPage> {
         'uid': user.uid,
         'signInMethod': 'google',
         'lastLogin': FieldValue.serverTimestamp(),
-      }, SetOptions(merge: true)); // Merge true avoids overwriting existing data
+      });
+    } else {
+      // Update the lastLogin timestamp
+      await userDocRef.update({
+        'lastLogin': FieldValue.serverTimestamp(),
+      });
+    }
 
       // Navigate to the respective screen
       first_login();
