@@ -8,6 +8,7 @@ class ProfileView extends StatelessWidget {
   final String userPhoto;
   final String displayName; // New field for the user's name
   final String email; // New field for the user's email
+  final String? phoneNumber; // Add new property
 
   const ProfileView({
     super.key,
@@ -17,6 +18,7 @@ class ProfileView extends StatelessWidget {
     required this.userPhoto,
     required this.displayName, // Required parameter for displayName
     required this.email, // Required parameter for email
+    this.phoneNumber, // Add optional phone number parameter
   });
 
   @override
@@ -84,6 +86,21 @@ class ProfileView extends StatelessWidget {
                                     maxLines: 1, // Ensure a single line
                                     overflow: TextOverflow.ellipsis, // Add ellipsis if it overflows
                                   ),
+                                  if (phoneNumber != null && phoneNumber!.isNotEmpty) ...[
+                                    const SizedBox(height: 4),
+                                    Text(
+                                      phoneNumber!,
+                                      style: const TextStyle(
+                                        fontFamily: FitnessAppTheme.fontName,
+                                        fontWeight: FontWeight.w400,
+                                        fontSize: 15,
+                                        letterSpacing: -0.1,
+                                        color: Color.fromARGB(255, 40, 44, 47),
+                                      ),
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ],
                                 ],
                               ),
                             ),

@@ -88,6 +88,7 @@ class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin
         animationController: widget.animationController,
         displayName: displayName,
         email: email,
+        phoneNumber: phoneNumber,
         userPhoto: userPhoto ?? '',
       ),
     );
@@ -136,9 +137,9 @@ class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin
           setState(() {
             displayName = userDoc['name_surname'];
             email = userDoc['email'];
-            //age = userDoc['age'].toString();
+            phoneNumber = userDoc['phone_number'] ?? '';
             userPhoto = user.photoURL;
-            addAllListData(); // Update the listViews with the latest data
+            addAllListData();
           });
         } 
       }
