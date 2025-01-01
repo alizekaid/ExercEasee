@@ -128,6 +128,30 @@ class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin
     try {
       User? user = FirebaseAuth.instance.currentUser;
       if (user != null) {
+        bool isGoogleUser = user.providerData
+            .any((provider) => provider.providerId == 'google.com');
+
+        if (isGoogleUser) {
+          setState(() {
+            displayName = user.displayName!;
+            //print(displayName);
+            email = user.email!;
+            userPhoto = user.photoURL!;
+          });
+        } else {
+          DocumentSnapshot userDoc = await FirebaseFirestore.instance
+              .collection('Users')
+              .doc(user.uid)
+              .get();
+          if (userDoc.exists) {
+            setState(() {
+              displayName = userDoc['name_surname'];
+              email = userDoc['email'];
+              age = userDoc['age'].toString();
+              phoneNumber = userDoc['phone_number'];
+            });
+          }
+        }
         DocumentSnapshot userDoc = await FirebaseFirestore.instance
             .collection('Users')
             .doc(user.uid)
@@ -264,6 +288,7 @@ class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin
     }
   }
   */
+
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -271,7 +296,7 @@ class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-          // --------------------------------- FOR IMAGE UPDATION --------------------------------
+            // --------------------------------- FOR IMAGE UPDATION --------------------------------
           /* 
             // Display current profile picture
           CircleAvatar(
@@ -339,21 +364,29 @@ class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin
               try {
                 User? user = FirebaseAuth.instance.currentUser;
                 if (user != null) {
+                   bool isGoogleUser = user.providerData
+                      .any((provider) => provider.providerId == 'google.com');
+                  // Update Firebase Auth display name for all users
+                  await user.updateDisplayName(nameController.text);
 
-                    // Update Firestore for regular user
-                    await FirebaseFirestore.instance
-                        .collection('Users')
-                        .doc(user.uid)
-                        .set({
-                      'name_surname': nameController.text,
-                      'phone_number': phoneNumberController.text,
-                    }, SetOptions(merge: true));
+                  // Update Firestore for all users (both Google and regular)
+                  await FirebaseFirestore.instance
+                      .collection('Users')
+                      .doc(user.uid)
+                      .set({
+                    'name_surname': nameController.text,
+                    'email': user.email,
+                    'phoneNumber':phoneNumberController.text,
+                    // Add any other fields you want to persist
+                    'isGoogleUser': isGoogleUser,
+                  }, SetOptions(merge: true));
                   
                   await fetchUserData();
                   
                   // Update state
                   setState(() {
                     displayName = nameController.text;
+                    phoneNumber = phoneNumberController.text;
                   });
 
                   // Rebuild the profile view
