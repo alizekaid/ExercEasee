@@ -51,17 +51,20 @@ class UserInjuryInformation {
         final injuryData = {
           'muscleName': muscleName,
           'painLevel': painLevel,
-          'progress': 0.0,          // Set progress to 0 initially
-          'gifUrls': gifUrls,       // Add the GIF URLs to the injury data
+          'progress': 0.0,
+          'gifUrls': gifUrls,
           'timestamp': FieldValue.serverTimestamp(),
         };
+        
+        // Add this line to actually set the document data
+        await injuryDocRef.set(injuryData);
 
-      print("Injury information added successfully");
+        print("Injury information added successfully");
+      }
+    } catch (e) {
+      print("Error handling injury information: $e");
     }
-  } catch (e) {
-    print("Error handling injury information: $e");
   }
-}
 
 
   // Function to make an API call to fetch GIFs

@@ -113,7 +113,7 @@ class _GifDisplayPageState extends State<GifDisplayPage> {
   Future<void> fetchGifUrls() async {
     try {
       final response = await http.get(Uri.parse(
-          'http://13.49.238.112:3000/get-gif/${widget.muscleName}/${widget.painLevel}'));
+          'http://51.20.3.172:3000/get-gif/${widget.muscleName}/${widget.painLevel}'));
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> data = json.decode(response.body);

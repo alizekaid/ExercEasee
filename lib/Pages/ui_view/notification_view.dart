@@ -69,7 +69,7 @@ class NotificationView extends StatelessWidget {
                                 fontWeight: FontWeight.w500,
                                 fontSize: 24,
                                 letterSpacing: -0.1,
-                                color: FitnessAppTheme.darkText,
+                                color: FitnessAppTheme.darkerText,
                               ),
                             ),
                           ),
@@ -80,12 +80,12 @@ class NotificationView extends StatelessWidget {
                               Flexible(
                                 child: Text(
                                   message,
-                                  textAlign: TextAlign.center,
+                                  textAlign: TextAlign.left,
                                   style: const TextStyle(
                                     fontFamily: FitnessAppTheme.fontName,
                                     fontWeight: FontWeight.w600,
-                                    fontSize: 20,
-                                    color: FitnessAppTheme.nearlyDarkBlue,
+                                    fontSize: 18,
+                                    color: FitnessAppTheme.lightText,
                                   ),
                                 ),
                               ),
