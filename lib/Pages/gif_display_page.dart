@@ -58,7 +58,7 @@ class _GifDisplayPageState extends State<GifDisplayPage> {
           .collection('Users')
           .doc(_user!.uid)
           .collection('Injuries')
-          .doc(widget.muscleName);
+          .doc(widget.muscleName.replaceAll(' ', '_').toLowerCase());
 
       // Get the progress value from Firestore
       DocumentSnapshot snapshot = await injuryDoc.get();
@@ -98,7 +98,7 @@ class _GifDisplayPageState extends State<GifDisplayPage> {
           .collection('Users')
           .doc(_user!.uid)
           .collection('Injuries')
-          .doc(widget.muscleName);
+          .doc(widget.muscleName.replaceAll(' ', '_').toLowerCase());
 
       // Update the progress field in Firestore
       await injuryDoc.set({'progress': _currentProgress}, SetOptions(merge: true));
@@ -111,9 +111,10 @@ class _GifDisplayPageState extends State<GifDisplayPage> {
 
   // Function to fetch GIF URLs from the API
   Future<void> fetchGifUrls() async {
+    var displayFormattedmuscleName = widget.muscleName.replaceAll(' ', '_').toLowerCase();
     try {
       final response = await http.get(Uri.parse(
-          'http://51.20.3.172:3000/get-gif/${widget.muscleName}/${widget.painLevel}'));
+          'http://51.20.3.172:3000/get-gif/${displayFormattedmuscleName}/${widget.painLevel}'));
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> data = json.decode(response.body);

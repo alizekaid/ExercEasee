@@ -38,6 +38,7 @@ class DiagnoseInjuries extends StatelessWidget {
     required int painLevel,
   }) async {
     try {
+      muscleName = muscleName.replaceAll(' ', '_').toLowerCase();
       final response = await http.get(Uri.parse(
           'http://51.20.3.172:3000/get-gif/$muscleName/$painLevel'));
 
@@ -47,6 +48,7 @@ class DiagnoseInjuries extends StatelessWidget {
         // Return the list of GIF URLs
         return List<String>.from(data['gifs']);
       } else {
+        print("---------------");
         throw Exception('Failed to fetch GIF URLs');
       }
     } catch (e) {
