@@ -84,7 +84,7 @@ class DiagnoseInjuries extends StatelessWidget {
       } else {
         // Document does not exist, create a new one with formattedMuscleName as document ID
         final injuryData = {
-          'muscleName': muscleName,
+          'muscleName': muscleName.replaceAll(' ', '_').toLowerCase(),
           'painLevel': painLevel,
           'gifUrls': gifUrls,
           'timestamp': FieldValue.serverTimestamp(),
