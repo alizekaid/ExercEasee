@@ -134,9 +134,9 @@ class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin
         if (isGoogleUser) {
           setState(() {
             displayName = user.displayName!;
-            //print(displayName);
             email = user.email!;
             userPhoto = user.photoURL!;
+            phoneNumber = "";
           });
         } else {
           DocumentSnapshot userDoc = await FirebaseFirestore.instance
@@ -144,31 +144,26 @@ class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin
               .doc(user.uid)
               .get();
           if (userDoc.exists) {
+            final data = userDoc.data() as Map<String, dynamic>;
             setState(() {
-              displayName = userDoc['name_surname'];
-              email = userDoc['email'];
-              age = userDoc['age'].toString();
-              phoneNumber = userDoc['phone_number'];
+              displayName = data['name_surname'] ?? '';
+              email = data['email'] ?? '';
+              age = (data['age'] ?? '').toString();
+              phoneNumber = data['phoneNumber'] ?? '';
             });
           }
         }
-        DocumentSnapshot userDoc = await FirebaseFirestore.instance
-            .collection('Users')
-            .doc(user.uid)
-            .get();
-
-        if (userDoc.exists) {
-          setState(() {
-            displayName = userDoc['name_surname'];
-            email = userDoc['email'];
-            phoneNumber = userDoc['phone_number'] ?? '';
-            userPhoto = user.photoURL;
-            addAllListData();
-          });
-        } 
+        addAllListData();
       }
     } catch (e) {
       print("Error fetching user data: $e");
+      setState(() {
+        displayName = '';
+        email = '';
+        age = '';
+        phoneNumber = '';
+        addAllListData();
+      });
     }
   }
 

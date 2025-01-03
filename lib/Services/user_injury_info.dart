@@ -74,7 +74,7 @@ class UserInjuryInformation {
   }) async {
     try {
       final response = await http.get(Uri.parse(
-          'http://13.49.238.112:3000/get-gif/$muscleName/$painLevel'));
+          'http://51.20.3.172:3000/get-gif/$muscleName/$painLevel'));
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> data = json.decode(response.body);
