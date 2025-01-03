@@ -62,7 +62,7 @@ class DiagnoseInjuries extends StatelessWidget {
     required int painLevel,
   }) async {
     try {
-       String formattedMuscleName = muscleName.replaceAll(' ', '_');
+       String formattedMuscleName = muscleName.replaceAll(' ', '_').toLowerCase();
         List<String> gifUrls = await _fetchGifUrls(muscleName: formattedMuscleName, painLevel: painLevel);
 
        final injuriesCollection = _firestore

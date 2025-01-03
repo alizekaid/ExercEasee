@@ -31,8 +31,9 @@ class WorkoutView extends StatelessWidget {
               //print('Latest document data: $data');
               //print('Timestamp: ${data['timestamp']}');
               String muscleName = data['muscleName'] ?? 'No';
-              //return muscleName[0].toUpperCase() + muscleName.substring(1);
-              return muscleName;
+              muscleName = muscleName.replaceAll('_', ' ');
+              return muscleName[0].toUpperCase() + muscleName.substring(1);
+              //return muscleName;
             }
             return 'No';
           });
@@ -161,7 +162,7 @@ class WorkoutView extends StatelessWidget {
                                 children: [
                                   Expanded(
                                     child: Text(
-                                      'Continue $bodyPart exercise',
+                                      '$bodyPart exercise',
                                       textAlign: TextAlign.left,
                                       style: TextStyle(
                                         fontFamily: FitnessAppTheme.fontName,

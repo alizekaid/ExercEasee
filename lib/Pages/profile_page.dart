@@ -128,30 +128,33 @@ class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin
     try {
       User? user = FirebaseAuth.instance.currentUser;
       if (user != null) {
+        // First check Firestore for any user data
+        DocumentSnapshot userDoc = await FirebaseFirestore.instance
+            .collection('Users')
+            .doc(user.uid)
+            .get();
+
         bool isGoogleUser = user.providerData
             .any((provider) => provider.providerId == 'google.com');
 
-        if (isGoogleUser) {
+        if (userDoc.exists) {
+          final data = userDoc.data() as Map<String, dynamic>;
+          setState(() {
+            displayName = data['name_surname'] ?? user.displayName ?? '';
+            email = data['email'] ?? user.email ?? '';
+            phoneNumber = data['phoneNumber'] ?? '';
+            if (isGoogleUser) {
+              userPhoto = user.photoURL ?? '';
+            }
+          });
+        } else if (isGoogleUser) {
+          // If no Firestore data exists yet for Google user
           setState(() {
             displayName = user.displayName!;
             email = user.email!;
             userPhoto = user.photoURL!;
             phoneNumber = "";
           });
-        } else {
-          DocumentSnapshot userDoc = await FirebaseFirestore.instance
-              .collection('Users')
-              .doc(user.uid)
-              .get();
-          if (userDoc.exists) {
-            final data = userDoc.data() as Map<String, dynamic>;
-            setState(() {
-              displayName = data['name_surname'] ?? '';
-              email = data['email'] ?? '';
-              age = (data['age'] ?? '').toString();
-              phoneNumber = data['phoneNumber'] ?? '';
-            });
-          }
         }
         addAllListData();
       }
