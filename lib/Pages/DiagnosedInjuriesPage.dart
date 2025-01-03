@@ -38,7 +38,7 @@ class DiagnoseInjuries extends StatelessWidget {
     required int painLevel,
   }) async {
     try {
-      muscleName = muscleName.replaceAll(' ', '_').toLowerCase();
+      muscleName = muscleName.replaceAll(' ', '_').toLowerCase().replaceAll("'", "");
       final response = await http.get(Uri.parse(
           'http://51.20.3.172:3000/get-gif/$muscleName/$painLevel'));
 
@@ -64,7 +64,7 @@ class DiagnoseInjuries extends StatelessWidget {
     required int painLevel,
   }) async {
     try {
-       String formattedMuscleName = muscleName.replaceAll(' ', '_').toLowerCase();
+       String formattedMuscleName = muscleName.replaceAll(' ', '_').toLowerCase().replaceAll("'", "");
         List<String> gifUrls = await _fetchGifUrls(muscleName: formattedMuscleName, painLevel: painLevel);
 
        final injuriesCollection = _firestore
@@ -84,7 +84,7 @@ class DiagnoseInjuries extends StatelessWidget {
       } else {
         // Document does not exist, create a new one with formattedMuscleName as document ID
         final injuryData = {
-          'muscleName': muscleName.replaceAll(' ', '_').toLowerCase(),
+          'muscleName': muscleName.replaceAll(' ', '_').toLowerCase().replaceAll("'", ""),
           'painLevel': painLevel,
           'gifUrls': gifUrls,
           'timestamp': FieldValue.serverTimestamp(),
