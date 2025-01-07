@@ -156,7 +156,7 @@ Given repositories are the building blocks of the project of ExercEase
   <tr>
     <td><img src="/docs/13.jpg" width="165"></td>
     <td><img src="/docs/14.jpg" width="165"></td>
-    <td><img src="/docs/15.jpeg" width="165"></td>
-    <td><img src="/docs/16.jpeg" width="165"></td>
+    <td><img src="/docs/15.jpg" width="165"></td>
+    <td><img src="/docs/16.jpg" width="165"></td>
   </tr>
 </table>
