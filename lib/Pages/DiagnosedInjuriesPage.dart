@@ -15,17 +15,17 @@ class DiagnoseInjuries extends StatelessWidget {
     "Tennis Elbow",
     "Golfer's Elbow",
     'Carpal Tunnel Syndrome',
-    'Extensor Tendon Injury',
+    //'Extensor Tendon Injury',
     'Weakness in Muscles Around the Scapula',
     'Scoliosis',
     'Lumbar Herniated Disc',
     'Sacroiliac Joint Degeneration',
     'Osteoarthritis of The Hip',
     'Meniscus Tear In the Knee',
-    'Anterior Cruciate Ligament Injury',
-    'Ligament Injuries',
-    'Ankle Sprain',
-    'Heel Spur',
+    //'Anterior Cruciate Ligament Injury',
+    //'Ligament Injuries',
+    //'Ankle Sprain',
+    //'Heel Spur',
   ];
 
 
