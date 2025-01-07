@@ -132,3 +132,22 @@ Given repositories are the building blocks of the project of ExercEase
 ## Contributors
 - **Ali Zekai Deveci**: https://github.com/alizekaid
 - **Hafize Sanli**: https://github.com/hafizesanli
+
+## Screenshots
+   ![Screenshot 1](/docs/1.jpeg)
+   ![Screenshot 2](/docs/2.jpeg)
+   ![Screenshot 3](/docs/3.jpeg)
+   ![Screenshot 1](/docs/4.jpg)
+   ![Screenshot 2](/docs/5.jpg)
+   ![Screenshot 3](/docs/6.jpeg)
+   ![Screenshot 1](/docs/7.jpeg)
+   ![Screenshot 2](/docs/8.jpeg)
+   ![Screenshot 3](/docs/9.jpeg)
+   ![Screenshot 1](/docs/10.jpeg)
+   ![Screenshot 2](/docs/11.jpeg)
+   ![Screenshot 3](/docs/12.jpeg)
+   ![Screenshot 1](/docs/13.jpg)
+   ![Screenshot 2](/docs/14.jpg)
+   ![Screenshot 3](/docs/15.jpeg)
+   ![Screenshot 1](/docs/16.jpeg)
+
