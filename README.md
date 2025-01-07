@@ -13,9 +13,9 @@ Exerc-Ease is a cross-platform mobile application designed to assist individuals
 - [How It Works](#how-it-works)
 - [Doctor Panel](#doctor-panel)
 - [Expected Challenges](#expected-challenges)
+- [Required Components](#components)
 - [Contributors](#contributors)
-- [License](#license)
-
+- [Screenshots](#screenshots)
 ---
 
 ## Introduction
@@ -78,19 +78,20 @@ Many people struggle to find exercises that are safe and effective for their inj
 ## Getting Started
 1. **Clone the Repository**:
    ```bash
-   git clone https://github.com/your-username/exerc-ease.git
-   cd exerc-ease
-2. **Install Dependencies**: Ensure you have Flutter installed, then run:
+   git clone https://github.com/alizekaid/ExercEasee.git
+   cd ExercEasee
+2. **Set Gradle Path**: add the path of your JDK to the line of "org.gradle.java.home=". (Since the Version 18 is one of the most compatible one for flutter, it is highly recommended for your use.)    
+3. **Install Dependencies**: Ensure you have Flutter installed, then run:
 ```bash
 flutter pub get
 ```
-3. **Run the App**:
+4. **Run the App**:
 ```bash
 flutter run
 ```
-4. **Setup Backend**:
+5. **Setup Backend**:
 -  Configure the AWS server for MySQL and API endpoints.
--   Ensure Firestore credentials are correctly set up in the app.
+-  Ensure Firestore credentials are correctly set up in the app.
 
 ## How It Works
 ### User Workflow:
@@ -116,9 +117,18 @@ In addition to the features available to users, Exerc-Ease includes a **Doctor P
 -   **Specialized Doctors**: Each doctor can only monitor users with injuries in their specialty. For example, a doctor specialized in shoulder injuries can monitor only users with shoulder injuries.
 -   **Admin Account**: An admin account is required to create and assign doctor accounts. Doctors cannot create their own accounts, and their access is limited to their specific field of expertise.
 -   **Notifications**: Doctors can send notifications to users about their recovery progress, which users can monitor within the app.
-- 
+
 ## Expected Challenges
 
 -   Ensuring accurate exercise recommendations for various injuries.
 -   Managing scalable and secure backend infrastructure.
 -   Validating exercises for safety and effectiveness across different injury severities.
+
+## Required Components:
+Given repositories are the building blocks of the project of ExercEase
+-   **Doctor Panel**: https://github.com/alizekaid/Exercease_Doctor_Panel
+-   **AWS Setup**: https://github.com/alizekaid/ExercEase_API_Database
+
+## Contributors
+- **Ali Zekai Deveci**: https://github.com/alizekaid
+- **Hafize Sanli**: https://github.com/hafizesanli
