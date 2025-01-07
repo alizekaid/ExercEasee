@@ -134,20 +134,29 @@ Given repositories are the building blocks of the project of ExercEase
 - **Hafize Sanli**: https://github.com/hafizesanli
 
 ## Screenshots
-   ![Screenshot 1](/docs/1.jpeg)
-   ![Screenshot 2](/docs/2.jpeg)
-   ![Screenshot 3](/docs/3.jpeg)
-   ![Screenshot 1](/docs/4.jpg)
-   ![Screenshot 2](/docs/5.jpg)
-   ![Screenshot 3](/docs/6.jpeg)
-   ![Screenshot 1](/docs/7.jpeg)
-   ![Screenshot 2](/docs/8.jpeg)
-   ![Screenshot 3](/docs/9.jpeg)
-   ![Screenshot 1](/docs/10.jpeg)
-   ![Screenshot 2](/docs/11.jpeg)
-   ![Screenshot 3](/docs/12.jpeg)
-   ![Screenshot 1](/docs/13.jpg)
-   ![Screenshot 2](/docs/14.jpg)
-   ![Screenshot 3](/docs/15.jpeg)
-   ![Screenshot 1](/docs/16.jpeg)
-
+  <table>
+  <tr>
+    <td><img src="/docs/1.jpeg" width="165"></td>
+    <td><img src="/docs/2.jpeg" width="165"></td>
+    <td><img src="/docs/3.jpeg" width="165"></td>
+    <td><img src="/docs/4.jpg" width="165"></td>
+  </tr>
+  <tr>
+   <td><img src="/docs/5.jpg" width="165"></td>
+    <td><img src="/docs/6.jpeg" width="165"></td>
+    <td><img src="/docs/7.jpeg" width="165"></td>
+    <td><img src="/docs/8.jpeg" width="165"></td>
+  </tr>
+  <tr>
+    <td><img src="/docs/9.jpeg" width="165"></td>
+    <td><img src="/docs/10.jpeg" width="165"></td>
+    <td><img src="/docs/11.jpeg" width="165"></td>
+    <td><img src="/docs/12.jpeg" width="165"></td>
+  </tr>
+  <tr>
+    <td><img src="/docs/13.jpg" width="165"></td>
+    <td><img src="/docs/14.jpg" width="165"></td>
+    <td><img src="/docs/15.jpeg" width="165"></td>
+    <td><img src="/docs/16.jpeg" width="165"></td>
+  </tr>
+</table>
