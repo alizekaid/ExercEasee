@@ -35,7 +35,7 @@ class _RESETpassword extends State<RESETpasswordPage> {
             children: [
               SizedBox(
                   height: 350,
-                  child: Image.asset('assets/images/reset_password.avif')),
+                  child: Image.asset('assets/images/reset_password.jpg')),
               Container(
                 alignment: Alignment.centerLeft,
                 child: const Text(

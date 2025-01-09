@@ -291,9 +291,11 @@ class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin
       context: context,
       builder: (context) => AlertDialog(
         title: const Text("Edit Profile"),
-        content: Column(
+        content: SingleChildScrollView(
+          child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
+
             // --------------------------------- FOR IMAGE UPDATION --------------------------------
           /* 
             // Display current profile picture
@@ -309,7 +311,6 @@ class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin
             ),
           ),
           */
-          const SizedBox(height: 20),
             TextField(
               controller: nameController,
               decoration: const InputDecoration(
@@ -351,6 +352,7 @@ class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin
               child: const Text("Reset Password"),
             ),
           ],
+        ),
         ),
         actions: [
           TextButton(

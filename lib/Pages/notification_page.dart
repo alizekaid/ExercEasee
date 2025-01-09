@@ -151,6 +151,9 @@ Future<void> fetchNotificationsForCurrentUser() async {
                       controller: scrollController,
                       itemCount: listViews.length,
                       scrollDirection: Axis.vertical,
+                      padding: EdgeInsets.only(
+                        bottom: MediaQuery.of(context).padding.bottom + MediaQuery.of(context).size.height * 0.12, // Add padding here
+                      ),
                       itemBuilder: (BuildContext context, int index) {
                         widget.animationController?.forward();
                         return listViews[index];
